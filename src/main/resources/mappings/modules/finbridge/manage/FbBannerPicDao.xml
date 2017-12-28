@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.finbridge.dao.manage.FbBannerPicDao">
+    
+	<sql id="fbBannerPicColumns">
+		a.id AS "id",
+		a.picname AS "picName",
+		a.summary AS "summary",
+		a.linkurl AS "linkUrl",
+		a.picurl AS "picUrl",
+		a.creator AS "creator",
+		a.operator AS "operator",
+		a.isdelete AS "isDelete",
+		a.createtime AS "createTime",
+		a.updatetime AS "updateTime"
+	</sql>
+	
+	<sql id="fbBannerPicJoins">
+	</sql>
+    
+	<select id="get" resultType="FbBannerPic">
+		SELECT 
+			<include refid="fbBannerPicColumns"/>
+		FROM fb_banner_pic a
+		<include refid="fbBannerPicJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FbBannerPic">
+		SELECT 
+			<include refid="fbBannerPicColumns"/>
+		FROM fb_banner_pic a
+		<include refid="fbBannerPicJoins"/>
+		<where>
+			<if test="picName != null and picName != ''">
+				AND a.picname LIKE concat('%',#{picName},'%')
+			</if>
+			<if test="creator != null and creator != ''">
+				AND a.creator LIKE concat('%',#{creator},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FbBannerPic">
+		SELECT 
+			<include refid="fbBannerPicColumns"/>
+		FROM fb_banner_pic a
+		<include refid="fbBannerPicJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO fb_banner_pic(
+
+			picname,
+			summary,
+			linkurl,
+			picurl,
+			creator,
+			operator
+		) VALUES (
+
+			#{picName},
+			#{summary},
+			#{linkUrl},
+			#{picUrl},
+			#{creator},
+			#{operator}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE fb_banner_pic SET 	
+			picname = #{picName},
+			summary = #{summary},
+			linkurl = #{linkUrl},
+			picurl = #{picUrl},
+			creator = #{creator},
+			operator = #{operator},
+			isdelete = #{isDelete},
+			createtime = #{createTime},
+			updatetime = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM fb_banner_pic
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

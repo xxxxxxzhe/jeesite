@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.finbridge.dao.manage.FbArticleDao">
+    
+	<sql id="fbArticleColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.link AS "link",
+		a.image AS "image",
+		a.keywords AS "keywords",
+		a.description AS "description",
+		a.weight AS "weight",
+		a.createtime AS "createTime",
+		a.updatetime AS "updateTime",
+		a.isdelete AS "isDelete",
+		a.content AS "content"
+	</sql>
+	
+	<sql id="fbArticleJoins">
+	</sql>
+    
+	<select id="get" resultType="FbArticle">
+		SELECT 
+			<include refid="fbArticleColumns"/>
+		FROM fb_article a
+		<include refid="fbArticleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FbArticle">
+		SELECT 
+			<include refid="fbArticleColumns"/>
+		FROM fb_article a
+		<include refid="fbArticleJoins"/>
+		<where>
+			
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+		</where>
+
+			ORDER BY weight
+	</select>
+	
+	<select id="findAllList" resultType="FbArticle">
+		SELECT 
+			<include refid="fbArticleColumns"/>
+		FROM fb_article a
+		<include refid="fbArticleJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO fb_article(
+			title,
+			link,
+			image,
+			keywords,
+			description,
+			weight,
+			content
+		) VALUES (
+			#{title},
+			#{link},
+			#{image},
+			#{keywords},
+			#{description},
+			#{weight},
+			#{content}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE fb_article
+		<trim prefix="set" suffixOverrides=",">
+			<if test="title != null">
+				title = #{title},
+			</if>
+			<if test="link != null">
+				link = #{link},
+			</if>
+			<if test="image != null">
+				image = #{image},
+			</if>
+			<if test="keywords != null">
+				keywords = #{keywords},
+			</if>
+			<if test="description != null">
+				description = #{description},
+			</if>
+			<if test="weight != null">
+				weight = #{weight},
+			</if>
+			<if test="isDelete != null">
+				isdelete = #{isDelete},
+			</if>
+			<if test="isDelete != null">
+				content = #{content}
+			</if>
+
+		</trim>
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM fb_article
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

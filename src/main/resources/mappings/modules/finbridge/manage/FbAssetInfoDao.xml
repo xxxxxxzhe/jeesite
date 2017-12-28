@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.finbridge.dao.manage.FbAssetInfoDao">
+    
+	<sql id="fbAssetInfoColumns">
+		a.id AS "id",
+		a.assetId AS "assetId",
+		a.projectname AS "projectName",
+		a.liststatus AS "listStatus",
+		a.listtime AS  "listTime",
+		a.belongto AS "belongTo",
+		a.isrecommend AS "isreCommend",
+		a.productname AS "productName",
+		a.producttype AS "productType",
+		a.peramount AS "perAmount",
+		a.productfeature AS "productFeature",
+		a.perperiod AS "perPeriod",
+		a.fundcostregionfrom AS "fundCostRegionFrom",
+		a.fundcostregionto AS "fundCostRegionTo",
+		a.dailypayamount AS "dailyPayAmount",
+		a.totalpayamount AS "totalPayAmount",
+		a.debtrate AS "debtRate",
+		a.companyname AS "companyName",
+		a.operationtime AS "operationTime",
+		a.companyaddress AS "companyAddress",
+		a.companybackground AS "companyBackground",
+		a.fundorigin AS "fundOrigin",
+		a.contactperson AS "contactPerson",
+		a.contactphone AS "contactPhone",
+		a.contactqq AS "contactQQ",
+		a.contactwechat AS "contactWechat",
+		a.aduitcontent AS "aduitContent",
+		a.aduitstatus AS "aduitStatus",
+		a.aduitperson AS "aduitPerson",
+		a.createtime AS "createTime",
+		a.updatetime AS "updateTime"
+	</sql>
+	
+	<sql id="fbAssetInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="FbAssetInfo">
+		SELECT 
+			<include refid="fbAssetInfoColumns"/>
+		FROM fb_asset_info a
+		<include refid="fbAssetInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FbAssetInfo">
+		SELECT 
+			<include refid="fbAssetInfoColumns"/>
+		FROM fb_asset_info a
+		<include refid="fbAssetInfoJoins"/>
+		<where>
+			<if test="projectName != null and projectName != ''">
+				AND a.productname LIKE concat('%',#{projectName},'%')
+			</if>
+			<if test="contactPerson != null and contactPerson != ''">
+				AND a.contactperson LIKE concat('%',#{contactPerson},'%')
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.companyname LIKE concat('%',#{companyName},'%')
+			</if>
+			<if test='aduitStatus != null and aduitStatus != "4" '>
+				AND a.aduitstatus = #{aduitStatus}
+			</if>
+			<if test='aduitStatus != null and aduitStatus == "4" '>
+				AND a.aduitstatus != 1
+			</if>
+			<if test="listStatus != null and listStatus != ''">
+				AND a.liststatus = #{listStatus}
+			</if>
+			<if test="beginDate != null and beginDate != '' and endDate != null and endDate != ''">
+				AND a.createtime BETWEEN #{beginDate} AND #{endDate}
+			</if>
+		</where>
+
+		ORDER BY a.createtime DESC
+	</select>
+	
+	<select id="findAllList" resultType="FbAssetInfo">
+		SELECT 
+			<include refid="fbAssetInfoColumns"/>
+		FROM fb_asset_info a
+		<include refid="fbAssetInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO fb_asset_info(
+
+			assetid,
+			projectname,
+			liststatus,
+			listtime,
+			belongto,
+			isrecommend,
+			productname,
+			producttype,
+			peramount,
+			productfeature,
+			perperiod,
+			fundcostregionfrom,
+			fundcostregionto,
+			dailypayamount,
+			totalpayamount,
+			debtrate,
+			companyname,
+			operationtime,
+			companyaddress,
+			companybackground,
+			fundorigin,
+			contactperson,
+			contactphone,
+			contactqq,
+			contactwechat,
+			aduitcontent,
+			aduitstatus,
+			aduitperson
+
+		) VALUES (
+
+			#{assetId},
+			#{projectName},
+			#{listStatus},
+			#{listTime},
+			#{belongTo},
+			#{isreCommend},
+			#{productName},
+			#{productType},
+			#{perAmount},
+			#{productFeature},
+			#{perPeriod},
+			#{fundCostRegionFrom},
+			#{fundCostRegionTo},
+			#{dailyPayAmount},
+			#{totalPayAmount},
+			#{debtRate},
+			#{companyName},
+			#{operationTime},
+			#{companyAddress},
+			#{companyBackground},
+			#{fundOrigin},
+			#{contactPerson},
+			#{contactPhone},
+			#{contactQQ},
+			#{contactWechat},
+			#{aduitContent},
+			#{aduitStatus},
+			#{aduitPerson}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE fb_asset_info
+		<trim prefix="set" suffixOverrides=",">
+			<if test="assetId != null and assetId != ''">
+				assetId = #{assetId},
+			</if>
+			<if test="projectName != null and projectName != ''">
+				projectname = #{projectName},
+			</if>
+			<if test="listStatus != null and listStatus != ''">
+				liststatus = #{listStatus},
+			</if>
+			<if test="listTime != null and listTime != ''">
+				listtime = #{listTime},
+			</if>
+			<if test="belongTo != null and belongTo != ''">
+				belongto = #{belongTo},
+			</if>
+			<if test="isreCommend != null">
+				isrecommend = #{isreCommend},
+			</if>
+			<if test="productName != null and productName != ''">
+				productname = #{productName},
+			</if>
+			<if test="productType != null and productType != ''">
+				producttype = #{productType},
+			</if>
+			<if test="perAmount != null and perAmount != ''">
+				peramount = #{perAmount},
+			</if>
+			<if test="productFeature != null and productFeature != ''">
+				productfeature = #{productFeature},
+			</if>
+			<if test="perPeriod != null and perPeriod != ''">
+				perperiod = #{perPeriod},
+			</if>
+			<if test="fundCostRegionFrom != null and fundCostRegionFrom != ''">
+				fundcostregionfrom = #{fundCostRegionFrom},
+			</if>
+			<if test="fundCostRegionTo != null and fundCostRegionTo != ''">
+				fundcostregionto = #{fundCostRegionTo},
+			</if>
+			<if test="dailyPayAmount != null and dailyPayAmount != ''">
+				dailypayamount = #{dailyPayAmount},
+			</if>
+			<if test="totalPayAmount != null and totalPayAmount != ''">
+				totalpayamount = #{totalPayAmount},
+			</if>
+			<if test="debtRate != null and debtRate != ''">
+				debtrate = #{debtRate},
+			</if>
+			<if test="companyName != null and companyName != ''">
+				companyname = #{companyName},
+			</if>
+			<if test="operationTime != null and operationTime != ''">
+				operationtime = #{operationTime},
+			</if>
+			<if test="companyAddress != null and companyAddress != ''">
+				companyaddress = #{companyAddress},
+			</if>
+			<if test="companyBackground != null and companyBackground != ''">
+				companybackground = #{companyBackground},
+			</if>
+			<if test="fundOrigin != null and fundOrigin != ''">
+				fundorigin = #{fundOrigin},
+			</if>
+			<if test="contactPerson != null and contactPerson != ''">
+				contactperson = #{contactPerson},
+			</if>
+			<if test="contactPhone != null and contactPhone != ''">
+				contactphone = #{contactPhone},
+			</if>
+			<if test="contactQQ != null and contactQQ != ''">
+				contactqq = #{contactQQ},
+			</if>
+			<if test="contactWechat != null and contactWechat != ''">
+				contactwechat = #{contactWechat},
+			</if>
+			<if test="aduitContent != null and aduitContent != ''">
+				aduitcontent = #{aduitContent},
+			</if>
+			<if test="aduitStatus != null and aduitStatus != ''">
+				aduitstatus = #{aduitStatus},
+			</if>
+			<if test="aduitPerson != null and aduitPerson != ''">
+				aduitperson = #{aduitPerson}
+			</if>
+
+		</trim>
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM fb_asset_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

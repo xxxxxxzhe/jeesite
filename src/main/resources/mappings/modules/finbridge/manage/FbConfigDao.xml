@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.finbridge.dao.manage.FbConfigDao">
+    
+	<sql id="fbConfigColumns">
+		a.id AS "id",
+		a.key AS "key",
+		a.value AS "value",
+		a.desc AS "desc",
+		a.createtime AS "createTime",
+		a.updatetime AS "updateTime"
+	</sql>
+	
+	<sql id="fbConfigJoins">
+	</sql>
+    
+	<select id="get" resultType="FbConfig">
+		SELECT 
+			<include refid="fbConfigColumns"/>
+		FROM fb_config a
+		<include refid="fbConfigJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FbConfig">
+		SELECT 
+			<include refid="fbConfigColumns"/>
+		FROM fb_config a
+		<include refid="fbConfigJoins"/>
+		<where>
+			<if test="key != null and key != ''">
+				AND a.key LIKE concat('%',#{key},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FbConfig">
+		SELECT 
+			<include refid="fbConfigColumns"/>
+		FROM fb_config a
+		<include refid="fbConfigJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO fb_config(
+
+			key,
+			value,
+			desc
+		) VALUES (
+
+			#{key},
+			#{value},
+			#{desc}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE fb_config
+		<trim prefix="set" suffixOverrides=",">
+			<if test="key != null and key != ''">
+				`key` = #{key},
+			</if>
+			<if test="value != null and value != ''">
+				`value` = #{value},
+			</if>
+			<if test="desc != null and desc != ''">
+				`desc` = #{desc}
+			</if>
+		</trim>
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM fb_config
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

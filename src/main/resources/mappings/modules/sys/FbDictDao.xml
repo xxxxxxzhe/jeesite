@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.FbDictDao">
+    
+	<sql id="fbDictColumns">
+		a.id AS "id",
+		a.key AS "key",
+		a.label AS "label",
+		a.dictname AS "dictname",
+		a.dictdesc AS "dictdesc",
+		a.isdelete AS "isdelete"
+	</sql>
+	
+	<sql id="fbDictJoins">
+	</sql>
+    
+	<select id="get" resultType="FbDict">
+		SELECT 
+			<include refid="fbDictColumns"/>
+		FROM fb_dict a
+		<include refid="fbDictJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FbDict">
+		SELECT 
+			<include refid="fbDictColumns"/>
+		FROM fb_dict a
+		<include refid="fbDictJoins"/>
+		<where>
+			<if test="dictname != null">
+				AND a.dictname = #{dictname}
+			</if>
+			<if test="key != null">
+				AND a.key = #{key}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FbDict">
+		SELECT 
+			<include refid="fbDictColumns"/>
+		FROM fb_dict a
+		<include refid="fbDictJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO fb_dict(
+			id,
+			key,
+			label,
+			dictname,
+			dictdesc,
+			isdelete
+		) VALUES (
+			#{id},
+			#{key},
+			#{label},
+			#{dictname},
+			#{dictdesc},
+			#{isdelete}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE fb_dict SET 	
+			key = #{key},
+			label = #{label},
+			dictname = #{dictname},
+			dictdesc = #{dictdesc},
+			isdelete = #{isdelete}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM fb_dict
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
